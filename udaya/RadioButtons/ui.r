@@ -1,5 +1,10 @@
 library(shiny)
 
+####
+## Test: create a table at the bottom. Add a button. When the button is clicked, save and push the information into the table.
+####
+
+
 shinyUI(fluidPage(
   
   titlePanel("Demonstration of shiny widgets"),

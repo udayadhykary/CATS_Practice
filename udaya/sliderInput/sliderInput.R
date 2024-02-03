@@ -1,6 +1,11 @@
 
 library(shiny)
 
+##
+## Test 1: make plots to display your control
+##
+
+
 ui<- fluidPage(
   titlePanel("Practicing sliderInput widget in R Shiny"),
   sidebarLayout(

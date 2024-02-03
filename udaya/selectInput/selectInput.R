@@ -1,5 +1,11 @@
 library(shiny)
 
+####
+## Test 1: Show the range of longitude latitude 
+## Test 2: Show it on the map
+####
+
+
 ui<- fluidPage(
   titlePanel("Practicing selectInput widget in R Shiny"),
   sidebarLayout(
