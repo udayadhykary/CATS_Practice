@@ -21,9 +21,13 @@ ui<- fluidPage(
     ),
     mainPanel(
       textOutput("out1"),
+      plotOutput("plot1"),
       textOutput("out2"),
+      plotOutput("plot2"),
       textOutput("out3"),
-      textOutput("out4")
+      plotOutput("plot3"),
+      textOutput("out4"),
+      plotOutput("plot4")
       
     )
     
@@ -39,6 +43,32 @@ server<- function(input, output){
     paste("You selected the value: ", input$slide3))
   output$out4 <- renderText(
     paste("You selected the value: ", input$slide4))
+
+     ## renderPlot used 
+  output$plot1 <- renderPlot({
+    x <- input$slide1
+    y <- sin(x)
+    plot(x, y, type = "p", main = "Plot 1", xlab = "X", ylab = "Y")
+  })
+  
+  output$plot2 <- renderPlot({
+    x <- input$slide2
+    y <- cos(x)
+    plot(x, y, type = "p", main = "Plot 2", xlab = "X", ylab = "Y")
+  })
+  
+  output$plot3 <- renderPlot({
+    x <- input$slide3[2] - input$slide3[1]
+    y <- x^2
+    plot(x, y, type = "p", main = "Plot 3", xlab = "X", ylab = "Y")
+  })
+  
+  output$plot4 <- renderPlot({
+    x <- input$slide4
+    y <- sqrt(x)
+    plot(x, y, type = "p", main = "Plot 4", xlab = "X", ylab = "Y")
+  })
+  
   
 }
 
