@@ -8,3 +8,10 @@ View(titanic)
 titanic$Pclass <- as.factor(titanic$Pclass)
 titanic$Survived <- as.factor(titanic$Survived)
 titanic$Sex <- as.factor(titanic$Sex)
+titanic$Embarked <- as.factor(titanic$Embarked)
+
+
+#survival_rate
+
+ggplot(titanic, aes(x = Survived))+ 
+  geom_bar()
