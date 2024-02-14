@@ -27,4 +27,12 @@ ggplot(titanic, aes(x = Survived))+
   geom_bar() +
   labs(y = "Passenger Count", title = "Titanic Survival Rates")
 
+#Survival rate by gender
+
+ggplot(titanic, aes(x = Sex, fill = Survived))+ 
+  theme_classic() +
+  geom_bar() +
+  labs(y = "Passenger Count", title = "Titanic Survival Rates by Sex")
+
+
 
