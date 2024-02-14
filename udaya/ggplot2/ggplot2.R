@@ -67,4 +67,12 @@ ggplot(titanic, aes(x = Age, fill = Survived)) +
        x = "Age (binwidth = 5)",
        title = "Survival Rates by Age")
 
+    #Using box plot
+
+ggplot(titanic, aes(x = Survived, y = Age)) +
+  theme_classic() +
+  geom_boxplot() +
+  labs(y = "Age",
+       x = "Survived",
+       title = "Survival Rates by Age; plotted using boxplot")
 
