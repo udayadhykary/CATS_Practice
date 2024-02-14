@@ -15,3 +15,7 @@ titanic$Embarked <- as.factor(titanic$Embarked)
 
 ggplot(titanic, aes(x = Survived))+ 
   geom_bar()
+
+#percentages
+
+prop.table(table(titanic$Survived))
