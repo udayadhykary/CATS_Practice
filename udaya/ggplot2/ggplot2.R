@@ -58,4 +58,13 @@ ggplot(titanic, aes(x = Age)) +
        x = "Age (binwidth = 5)",
        title = "Titanic Dataset Age Distribtion")
 
+#Survival rates by age
+
+ggplot(titanic, aes(x = Age, fill = Survived)) +
+  theme_classic() +
+  geom_histogram(binwidth = 5) +
+  labs(y = "Passenger Count",
+       x = "Age (binwidth = 5)",
+       title = "Survival Rates by Age")
+
 
