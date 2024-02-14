@@ -19,3 +19,12 @@ ggplot(titanic, aes(x = Survived))+
 #percentages
 
 prop.table(table(titanic$Survived))
+
+#Adding some customization
+
+ggplot(titanic, aes(x = Survived))+ 
+  theme_classic() +
+  geom_bar() +
+  labs(y = "Passenger Count", title = "Titanic Survival Rates")
+
+
