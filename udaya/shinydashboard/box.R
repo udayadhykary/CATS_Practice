@@ -4,7 +4,7 @@ library(plotly)
 library(datasets)
 
 ui<- dashboardPage(
-  dashboardHeader(title = "Practicing to create a box using shinydashboard package", titleWidth = 600),
+  dashboardHeader(title = "Practicing to create a box and styling it using shinydashboard package", titleWidth = 600),
   
   dashboardSidebar(
     sidebarMenu(
@@ -15,11 +15,14 @@ ui<- dashboardPage(
   dashboardBody(
     tabItems(
       tabItem(tabName = "box",
-              fluidRow(box(title = "Creating a box with a plot", plotlyOutput("plot1",height = 250)),
+              fluidRow(box(title = "Creating a box with a plot", plotlyOutput("plot1",height = 250),
+                           status = "danger", solidHeader = T, collapsible = T),
                        box(title = "Creating a box with a plot", plotlyOutput("plot2",height = 250))),
                     
-              fluidRow(box(title = "Creating box with a datatable", tableOutput("data"),width = 6),
-                       box(title = "Creating box with input widget", uiOutput("inputwidget"),width = 4))
+              fluidRow(box(title = "Creating box with a datatable", tableOutput("data"),width = 6,
+                           solidHeader = T, status = "success", background = "blue"),
+                       box(title = "Creating box with input widget", uiOutput("inputwidget"),width = 4,
+                           background = "black", solidHeader = T))
                        
               )
       
