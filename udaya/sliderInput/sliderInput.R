@@ -36,36 +36,36 @@ ui<- fluidPage(
 )
 server<- function(input, output){
   
-  output$out1 <- renderText(
+  output$out31 <- renderText(
     paste("You selected the value: ", input$slide1))
-  output$out2 <- renderText(
+  output$out32 <- renderText(
     paste("You selected the value: ", input$slide2))
-  output$out3 <- renderText(
+  output$out33 <- renderText(
     paste("You selected the value: ", input$slide3))
-  output$out4 <- renderText(
+  output$out34 <- renderText(
     paste("You selected the value: ", input$slide4))
 
      ## renderPlot used 
   output$plot1 <- renderPlot({
-    x <- input$slide1
+    x <- input$slide31
     y <- sin(x)
     plot(x, y, type = "p", main = "Plot 1", xlab = "X", ylab = "Y")
   })
   
   output$plot2 <- renderPlot({
-    x <- input$slide2
+    x <- input$slide32
     y <- cos(x)
     plot(x, y, type = "p", main = "Plot 2", xlab = "X", ylab = "Y")
   })
   
   output$plot3 <- renderPlot({
-    x <- input$slide3[2] - input$slide3[1]
+    x <- input$slide3[2] - input$slide33[1]
     y <- x^2
     plot(x, y, type = "p", main = "Plot 3", xlab = "X", ylab = "Y")
   })
   
   output$plot4 <- renderPlot({
-    x <- input$slide4
+    x <- input$slide34
     y <- sqrt(x)
     plot(x, y, type = "p", main = "Plot 4", xlab = "X", ylab = "Y")
   })
