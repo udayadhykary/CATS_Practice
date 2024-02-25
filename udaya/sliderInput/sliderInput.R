@@ -3,6 +3,7 @@ library(shiny)
 
 ##
 ## Test 1: make plots to display your control
+## Test 2: Show your values within only one plot. Make the plot meaningful.
 ##
 
 
