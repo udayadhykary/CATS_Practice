@@ -1,7 +1,7 @@
 library(leaflet)
 library(magrittr) 
 
-
+states <- geojsonio::geojson_read("https://rstudio.github.io/leaflet/json/us-states.geojson", what = "sp")
 m<-leaflet(states) %>%
   setView(-96, 37.8, 4) %>%
   addProviderTiles("MapBox", options = providerTileOptions(
