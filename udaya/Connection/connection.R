@@ -1,6 +1,6 @@
 library(RMySQL)
 library(DBI)
-library(dply)
+library(dplyr)
 
 connection <- dbConnect(RMySQL::MySQL(),
                         dbname = "college",
