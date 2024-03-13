@@ -1,4 +1,5 @@
-create database college;
+
+
 
 use college;
 
@@ -110,15 +111,34 @@ create table dept (
 id int primary key,
 name varchar(50)
 );
+use college;
+insert into dept 
+values
+(101, "english"),
+(102, "transport");
 
+drop table dept;
+drop table teacher;
 create table teacher (
 id int primary key,
 name varchar(50),
 dept_id int,
 foreign key (dept_id) references dept(id)
 on delete cascade
-on update cascade
-);
+on update cascade);
+
+insert into teacher 
+values
+(01, "hari", 101),
+(02, "shyam", 102),
+(03, "karan", 101);
+ 
+select * from teacher;
+ 
+select * from teacher
+join dept
+on dept.id = teacher.dept_id
+where dept_id = 102;
 
 #using alter
 alter table student
@@ -131,3 +151,4 @@ drop column age;
 select name, marks 
 from student
 where marks > ( select avg(marks) from student);
+
