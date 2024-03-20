@@ -62,5 +62,15 @@ agnt
 
 glimpse(agnt)
 
+# R query with dplyr
+
+agents_db <- tbl(connection, "AGENTS")
+
+agents_db
+
+london_agents <- agents_db %>% filter(WORKING_AREA == "London")
+
+london_agents
+
 dbDisconnect(connection)
 
