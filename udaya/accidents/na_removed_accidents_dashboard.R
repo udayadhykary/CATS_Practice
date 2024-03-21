@@ -20,11 +20,13 @@ ui <- dashboardPage(title = "US_Accidents", skin = "red",
                                   menuItem(text = "Histogram of Temperature(F)", tabName = "hist_plot_temp", icon = icon("bars")),
                                   menuItem(text = "Histogram of Wind_Chill(F)", tabName = "hist_plot_wind", icon = icon("bars")),
                                   menuItem(text = "Barplot of Sunrise and Sunset", tabName = "bar_plot_sun", icon = icon("bar-chart")),
-                                  menuItem(text = "Top 10 States with Highest Accidents", tabName = "high_accidents", icon = icon("sort-desc")),
+                                  menuItem(text = "Top States with Highest Accidents", tabName = "high_accidents", icon = icon("sort-desc")),
                                   menuItem(text = "Histogram of Precipitation(in).", tabName = "hist_plot_prec", icon = icon("bars")),
                                   menuItem(text = "Histogram of Humidity(%)", tabName = "hist_plot_humi", icon = icon("bars")),
                                   menuItem(text = "Histogram of Visibility(mi)", tabName = "hist_plot_visi", icon = icon("bars")),
-                                  menuItem(text = "Scatter plot of Different Variables", tabName = "scatter", icon = icon("bar-chart"))
+                                  menuItem(text = "Scatter plot of Different Variables", tabName = "scatter", icon = icon("bar-chart")),
+                                  menuItem(text = "Top Weather Condition", tabName = "cond", icon = icon("sort-desc")),
+                                  menuItem(text = "Top Cities with Highest Accidents", tabName = "cities", icon = icon("sort-desc"))
                       )
                     ),
                     dashboardBody(
@@ -65,6 +67,8 @@ ui <- dashboardPage(title = "US_Accidents", skin = "red",
                         
                         tabItem(tabName = "high_accidents", 
                                 fluidRow(
+                                  box(title = "Dashboard Controls",status = "warning", solidHeader = T, background = "light-blue",
+                                      sliderInput("bins6","Enter the no. of states having highest no of accidents: ", min = 1, max = 49, value = 10)),
                                   box(title = "Plot of top 10 status with most accidents in 2022", status = "primary", plotOutput("plot6"))
                                 )
                         ),
@@ -100,6 +104,22 @@ ui <- dashboardPage(title = "US_Accidents", skin = "red",
                                       selectInput("xvar", "Select the X-variable you want to plot", choices = names(accidents), selected = "Temperature(F)"),
                                       br(),
                                       selectInput("yvar", "Select the Y-variable you want to plot", choices = names(accidents), selected = "Temperature(F)"))
+                                )
+                        ),
+                        
+                        tabItem(tabName = "cond", 
+                                fluidRow(
+                                  box(title = "Dashboard Controls",status = "warning", solidHeader = T, background = "light-blue",
+                                      sliderInput("bins7","Enter the no. of conditions you want to see (in desc order): ", min = 1, max = 85, value = 10)),
+                                  box(title = "Plot of top selected weather condtion", status = "primary", plotOutput("plot11"))
+                                )
+                        ),
+                        
+                        tabItem(tabName = "cities", 
+                                fluidRow(
+                                  box(title = "Dashboard Controls",status = "warning", solidHeader = T, background = "light-blue",
+                                      sliderInput("bins8","Enter the no. of cities with highest no. of accidents: ", min = 1, max = 50, value = 10)),
+                                  box(title = "Plot of top selected weather condtion", status = "primary", plotOutput("plot12"))
                                 )
                         )
                       )
@@ -155,21 +175,18 @@ server <- function(input, output, session){
     
     accidents_by_state <- table(accidents$State)
     
-    accidents_by_state <- as.data.frame(accidents_by_state)
+    accidents_by_state_df <- as.data.frame(accidents_by_state)
     
-    names(accidents_by_state) <- c("State", "Accidents")
+    names(accidents_by_state_df) <- c("State", "Accidents")
     
-    accidents_by_state$State <- factor(accidents_by_state$State, 
-                                       levels = accidents_by_state$State[order(-accidents_by_state$Accidents)])
+    sorted_by_states<- accidents_by_state_df[order(-accidents_by_state_df$Accidents), ]
     
+    top_states <- head(sorted_by_states, input$bins6)
     
-    top_10_states <- head(accidents_by_state, 10)
-    
-    ggplot(top_10_states, aes(x = State, y = Accidents)) +
+    ggplot(top_states, aes(x = reorder(State, -Accidents), y = Accidents)) +
       geom_bar(stat = "identity", fill = "skyblue") +
-      labs(x = "State", y = "Number of Accidents", title = "Top 10 States with Highest Number of Accidents") +
+      labs(x = "State", y = "Number of Accidents", title = paste("Top", input$bins6, "States with Highest Number of Accidents")) +
       theme(axis.text.x = element_text(angle = 45, hjust = 1))
-    
   })
   
   output$plot7 <- renderPlot({
@@ -202,6 +219,41 @@ server <- function(input, output, session){
     
   })
   
+  output$plot11 <- renderPlot({
+    
+    weather_condition <- table(accidents$Weather_Condition)
+    
+    weather_condition_df <- as.data.frame(weather_condition)
+    
+    names(weather_condition_df) <- c("Condition", "Count")
+    
+    sorted_weather_condition <- weather_condition_df[order(-weather_condition_df$Count), ]
+    
+    top_conditions <- head(sorted_weather_condition, input$bins8)
+    
+    ggplot(top_conditions, aes(x = reorder(Condition, -Count), y = Count)) +
+      geom_bar(stat = "identity", fill = "skyblue") +
+      labs(x = "Weather Condition", y = "Count", title = paste("Top",input$bins7, "Weather Conditions during Accidents")) +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  })
+  
+  output$plot12 <- renderPlot({
+    
+    accidents_by_cities <- table(accidents$City)
+    
+    accidents_by_cities_df <- as.data.frame(accidents_by_cities)
+    
+    names(accidents_by_cities_df) <- c("City", "Accidents")
+    
+    sorted_cities <- accidents_by_cities_df[order(-accidents_by_cities_df$Accidents), ]
+    
+    top_cities <- head(sorted_cities, input$bins8)
+    
+    ggplot(top_cities, aes(x = reorder(City, -Accidents), y = Accidents)) +
+      geom_bar(stat = "identity", fill = "skyblue") +
+      labs(x = "City", y = "Number of Accidents", title = paste("Top", input$bins8, "Cities with Highest Number of Accidents")) +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  })
 }
 
 summary(accidents)
