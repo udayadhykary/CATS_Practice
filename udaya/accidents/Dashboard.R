@@ -125,7 +125,6 @@ ui <- dashboardPage(title = "US_Accidents", skin = "red",
     )
   )
 )
-length(unique(accidents$City))
 
 server <- function(input, output, session){
   
@@ -146,9 +145,9 @@ server <- function(input, output, session){
   
   output$plot2 <- renderPlot({
     
-    count_timezone <- accidents %>% count(Timezone)
-    rf_timezone <- count_timezone$n / sum(count_timezone$n)
-    barplot(rf_timezone, names.arg = count_timezone$Timezone, main = "Relative Frequency of Timezone")
+    count_timezone <- count(accidents$Timezone)
+    rf_timezone <- count_timezone$freq / sum(count_timezone$freq)
+    barplot(rf_timezone, names.arg = count_timezone$x, main = "Relative Frequency of Timezone")
     
   })
   
@@ -166,10 +165,10 @@ server <- function(input, output, session){
   
   output$plot5 <- renderPlot({
     
-  count_sunrise_sunset <- accidents %>% count(Sunrise_Sunset)
-  rf_sunrise_sunset <- count_sunrise_sunset$n/sum(count_sunrise_sunset$n)
-  barplot(rf_sunrise_sunset, names.arg = count_sunrise_sunset$Sunrise_Sunset, main = "Relative Frequency of sunrise_sunset")
-
+    count_sunrise_sunset <- count(accidents$Sunrise_Sunset)
+    rf_sunrise_sunset <- count_sunrise_sunset$freq/sum(count_sunrise_sunset$freq)
+    barplot(rf_sunrise_sunset, names.arg = count_sunrise_sunset$x, main = "Relative Frequency of sunrise_sunset")
+    
   })
   
   output$plot6 <- renderPlot({
