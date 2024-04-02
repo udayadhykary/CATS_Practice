@@ -4,6 +4,8 @@ library(ggplot2)
 library(tidyr)
 library(shiny)
 library(shinydashboard)
+library(maps)
+library(mapdata)
 
 setwd("C:\\Users\\udaya\\OneDrive\\Desktop\\accident")
 accidents <- read_csv("new_accidents.csv")
@@ -26,7 +28,8 @@ ui <- dashboardPage(title = "US_Accidents", skin = "red",
                 menuItem(text = "Histogram of Visibility(mi)", tabName = "hist_plot_visi", icon = icon("bars")),
                 menuItem(text = "Scatter plot of Different Variables", tabName = "scatter", icon = icon("bar-chart")),
                 menuItem(text = "Top Weather Condition", tabName = "cond", icon = icon("sort-desc")),
-                menuItem(text = "Top Cities with Highest Accidents", tabName = "cities", icon = icon("sort-desc"))
+                menuItem(text = "Top Cities with Highest Accidents", tabName = "cities", icon = icon("sort-desc")),
+                menuItem(text = "Accidents on Map", tabName = "map_accidents", icon = icon("map"))
     )
   ),
   dashboardBody(
@@ -121,6 +124,12 @@ ui <- dashboardPage(title = "US_Accidents", skin = "red",
                     sliderInput("bins8","Enter the no. of cities with highest no. of accidents: ", min = 1, max = 50, value = 10)),
                 box(title = "Plot of top selected weather condtion", status = "primary", plotOutput("plot12"))
               )
+      ),
+      
+      tabItem(tabName = "map_accidents", 
+              fluidRow(
+                box(title = "Plot of US_Accidents in map", status = "primary", plotOutput("plot13"))
+              )
       )
     )
   )
@@ -145,9 +154,9 @@ server <- function(input, output, session){
   
   output$plot2 <- renderPlot({
     
-    count_timezone <- count(accidents$Timezone)
-    rf_timezone <- count_timezone$freq / sum(count_timezone$freq)
-    barplot(rf_timezone, names.arg = count_timezone$x, main = "Relative Frequency of Timezone")
+    count_timezone <- accidents %>% count(Timezone)
+    rf_timezone <- count_timezone$n / sum(count_timezone$n)
+    barplot(rf_timezone, names.arg = count_timezone$Timezone, main = "Relative Frequency of Timezone")
     
   })
   
@@ -165,10 +174,9 @@ server <- function(input, output, session){
   
   output$plot5 <- renderPlot({
     
-    count_sunrise_sunset <- count(accidents$Sunrise_Sunset)
-    rf_sunrise_sunset <- count_sunrise_sunset$freq/sum(count_sunrise_sunset$freq)
-    barplot(rf_sunrise_sunset, names.arg = count_sunrise_sunset$x, main = "Relative Frequency of sunrise_sunset")
-    
+    count_sunrise_sunset <- accidents %>% count(Sunrise_Sunset)
+    rf_sunrise_sunset <- count_sunrise_sunset$n/sum(count_sunrise_sunset$n)
+    barplot(rf_sunrise_sunset, names.arg = count_sunrise_sunset$Sunrise_Sunset, main = "Relative Frequency of sunrise_sunset")
   })
   
   output$plot6 <- renderPlot({
@@ -235,6 +243,7 @@ server <- function(input, output, session){
       geom_bar(stat = "identity", fill = "skyblue") +
       labs(x = "Weather Condition", y = "Count", title = paste("Top",input$bins7, "Weather Conditions during Accidents")) +
       theme(axis.text.x = element_text(angle = 45, hjust = 1))
+    
   })
   
   output$plot12 <- renderPlot({
@@ -253,7 +262,15 @@ server <- function(input, output, session){
       geom_bar(stat = "identity", fill = "skyblue") +
       labs(x = "City", y = "Number of Accidents", title = paste("Top", input$bins8, "Cities with Highest Number of Accidents")) +
       theme(axis.text.x = element_text(angle = 45, hjust = 1))
+    
   })
+  
+  output$plot13 <- renderPlot({
+    
+    map("usa", fill = TRUE, col = "white", bg = "lightblue")
+    points(accidents$Start_Lng, accidents$Start_Lat, pch = 20, cex  = 0.01, col = "red")
+  })
+  
 }
 
 shinyApp(ui = ui, server = server)
