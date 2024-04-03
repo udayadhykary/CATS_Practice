@@ -6,10 +6,18 @@ library(shiny)
 library(shinydashboard)
 library(maps)
 library(mapdata)
+library(leaflet)
 
 setwd("C:\\Users\\udaya\\OneDrive\\Desktop\\accident")
 accidents <- read_csv("new_accidents.csv")
+accidents <- drop_na(accidents)
 
+map <- leaflet()
+map <- addTiles(map)
+map <- setView(map, lng = mean(accidents$Start_Lng), lat = mean(accidents$Start_Lat), zoom = 5)
+map <- addCircleMarkers(map, data = accidents, lng = ~Start_Lng, lat = ~Start_Lat, popup = ~Street,
+                        label = paste("Latitude:", accidents$Start_Lat, "Longitude:", accidents$Start_Lng),
+                        clusterOptions = markerClusterOptions())
 
 ui <- dashboardPage(title = "US_Accidents", skin = "red",
   dashboardHeader(title = "Analyzing US Accidents Data", titleWidth = 300),
@@ -29,7 +37,8 @@ ui <- dashboardPage(title = "US_Accidents", skin = "red",
                 menuItem(text = "Scatter plot of Different Variables", tabName = "scatter", icon = icon("bar-chart")),
                 menuItem(text = "Top Weather Condition", tabName = "cond", icon = icon("sort-desc")),
                 menuItem(text = "Top Cities with Highest Accidents", tabName = "cities", icon = icon("sort-desc")),
-                menuItem(text = "Accidents on Map", tabName = "map_accidents", icon = icon("map"))
+                menuItem(text = "Accidents on Map", tabName = "map_accidents", icon = icon("map")),
+                menuItem(text = "Mapping using leaflet package", tabName = "leaf_map", icon = icon("map"))
     )
   ),
   dashboardBody(
@@ -130,6 +139,10 @@ ui <- dashboardPage(title = "US_Accidents", skin = "red",
               fluidRow(
                 box(title = "Plot of US_Accidents in map", status = "primary", plotOutput("plot13"))
               )
+      ),
+      
+      tabItem(tabName = "leaf_map",
+              title = "Plot of US_Accidents in map using leaflet package", status = "primary", leafletOutput("plot14")
       )
     )
   )
@@ -269,6 +282,13 @@ server <- function(input, output, session){
     
     map("usa", fill = TRUE, col = "white", bg = "lightblue")
     points(accidents$Start_Lng, accidents$Start_Lat, pch = 20, cex  = 0.01, col = "red")
+    
+  })
+  
+  output$plot14 <- renderLeaflet({
+    
+    map
+    
   })
   
 }
