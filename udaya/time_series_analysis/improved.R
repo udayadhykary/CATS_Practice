@@ -28,7 +28,12 @@ plot(aggregate(AirPassengers,FUN=mean))
 
 boxplot(AirPassengers~cycle(AirPassengers))
 
-adf.test(diff(log(AirPassengers)), alternative="stationary", k=0)
+plot(log(AirPassengers))
+abline(reg=lm(log(AirPassengers)~time(log(AirPassengers))))
+
+plot(diff(log(AirPassengers)))
+abline(reg=lm(diff(log(AirPassengers))~time(diff(log(AirPassengers)))))
+adf.test(diff(log(AirPassengers)))
 
 acf(log(AirPassengers))
 
@@ -46,6 +51,15 @@ ts.plot(AirPassengers,2.718^pred$pred, log = "y", lty = c(1,3))
 
 
 m<- auto.arima(log(AirPassengers), trace = TRUE)
+
+acf(m$residuals, main = "COrrelogram")
+pacf(m$residuals, main = "Partial Correlogram")
+
+#Ljung-Box test
+
+Box.test(m$residuals, lag = 20, type = "Ljung-Box")
+
+
 forecasted <- forecast(m, h = 120)
 plot(forecasted)
 print(forecasted)
